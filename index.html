@@ -8,6 +8,20 @@
 </head>
 <body>
     <div id="container"></div>
-    <script src="index.js" defer></script>
+    <div id="selectType">
+        <div class="col">
+            <input type="radio" id="start" name="blockSelect" value="start" checked="checked">
+            <label for="start">Starting Point</label>
+        </div>
+        <div class="col">
+            <input type="radio" id="end" name="blockSelect" value="end">
+            <label for="end">Ending Point</label>
+        </div>
+        <div class="col">
+            <input type="radio" id="obstacle" name="blockSelect" value="obstacle">
+            <label for="obstacle">Obstacle</label>
+        </div>
+    </div>
+    <script src="./js/index.js" defer></script>
 </body>
 </html>
