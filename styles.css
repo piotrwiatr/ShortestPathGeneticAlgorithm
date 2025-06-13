@@ -1,0 +1,32 @@
+#container {
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+}
+
+.row {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.cell {
+    padding:20px;
+    border: 2px solid black;
+}
+
+.blank {
+    background-color: white;
+}
+
+.start {
+    background-color: green;
+}
+
+.end {
+    background-color: blue;
+}
+
+.obstacle {
+    background-color: black;
+}
