@@ -1,4 +1,6 @@
 class Grid {
+    startLocation;
+
     constructor(height, width) {
         this.height = height;
         this.width = width;
@@ -6,6 +8,7 @@ class Grid {
         // 1 = starting point
         // 2 = ending point
         // 3 = obstacle
+        // 4 = path, given by GA
         this.grid = [];
         for (let i = 0; i < this.height; i++) {
             this.grid.push([]);
@@ -35,6 +38,9 @@ class Grid {
                     case 3:
                         cell.classList.add("obstacle");
                         break;
+                    case 4:
+                        cell.classList.add("path");
+                        break;
                     default:
                         cell.classList.add("blank");
                 }
@@ -55,6 +61,7 @@ class Grid {
             }
         }
         this.grid[row][col] = 1;
+        startLocation = [row, col];
     }
 
     placeEnd(row, col) {

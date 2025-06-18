@@ -37,6 +37,10 @@ body {
     background-color: black;
 }
 
+.path {
+    background-color:red;
+}
+
 #selectType {
     margin-top: 20px;
     display:flex;
