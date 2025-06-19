@@ -1,5 +1,6 @@
 class Grid {
     startLocation;
+    endLocation;
 
     constructor(height, width) {
         this.height = height;
@@ -61,7 +62,7 @@ class Grid {
             }
         }
         this.grid[row][col] = 1;
-        startLocation = [row, col];
+        this.startLocation = [row, col];
     }
 
     placeEnd(row, col) {
@@ -74,6 +75,7 @@ class Grid {
             }
         } 
         this.grid[row][col] = 2;
+        this.endLocation = [row, col];
     }
 
     placeObstacle(row, col) {
