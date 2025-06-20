@@ -87,6 +87,7 @@ export const ga = (codeLength, grid) => {
         return dna;
     };
 
+    // How is this not a default JS function?
     const sum = (arr) => {
         let result = 0;
         for (let i = 0; i < arr.length; i++) {
@@ -96,11 +97,31 @@ export const ga = (codeLength, grid) => {
     }
 
     const select = (population, fitValues) => {
-        let fitnessSum = sum(fitValues);
+        const fitnessSum = sum(fitValues);
+        let prob = fitValues[0] / fitnessSum;
+        const probabilities = [prob];
+
+        for (let i = 1; i < population.length; i++) {
+            prob = fitValues[i] / fitnessSum;
+            probabilities.push(prob + probabilities[i-1]);
+        }
+
+        const newPopulation = [];
+        for (let i = 0; i < popSize; i++) {
+            const randomResult = Math.random() // floating point between 0 and 1
+            for (let j = 0; j < popSize; j++) {
+                if (randomResult < probabilities[j]) {
+                    newPopulation.push(population[j]);
+                    break;
+                }
+            }
+        }
+
+        return newPopulation;
     };
 
     const crossover = (parent, population) => {
-
+        
     };
 
     const mutate = (child) => {
