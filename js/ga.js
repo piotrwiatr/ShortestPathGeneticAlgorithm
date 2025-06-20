@@ -13,7 +13,7 @@ export const ga = (codeLength, grid) => {
     let DOWN = [3, 7];
     let LEFT = [4];
 
-    const popSize = 100;
+    const popSize = 3000;
     const crossRate = 0.8;
     const mutationRate = 0.003;
     const numGenerations = 100;
@@ -37,15 +37,21 @@ export const ga = (codeLength, grid) => {
             }
 
             // Penalize illegal DNA sequences
-            if (ptrRow >= grid.height | ptrRow < 0 | ptrCol >= grid.width | ptrCol < 0 | grid.grid[ptrRow][ptrCol] === 3) {
-                return Infinity;
+            if (ptrRow >= grid.height || ptrRow < 0 || ptrCol >= grid.width || ptrCol < 0) {
+                return 1 / dnaSize;
             }
+            if (grid.grid[ptrRow][ptrCol] === 3) {
+                return 1 / dnaSize;
+            }
+            
+            if (STAY.includes(moveList[i]))
+                continue;
             fitValue++;
         }
 
         // Ensure that the final cell we reach is the end block
         if (grid.grid[ptrRow][ptrCol] !== 2) {
-            return Infinity;
+            return 1 / dnaSize;
         }
 
         return (1 / fitValue);
@@ -96,7 +102,19 @@ export const ga = (codeLength, grid) => {
             result += arr[i];
         }
         return result;
-    }
+    };
+
+    // And this?
+    const max = (arr) => {
+        let max = 0;
+
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[max] < arr[i]) 
+                max = i;
+        }
+
+        return max;
+    };
 
     const select = (population, fitValues) => {
         const fitnessSum = sum(fitValues);
@@ -112,13 +130,13 @@ export const ga = (codeLength, grid) => {
         for (let i = 0; i < popSize; i++) {
             const randomResult = Math.random() // floating point between 0 and 1
             for (let j = 0; j < popSize; j++) {
-                if (randomResult < probabilities[j]) {
+                if (randomResult <= probabilities[j]) {
                     newPopulation.push(population[j]);
                     break;
                 }
             }
         }
-
+        
         return newPopulation;
     };
 
@@ -164,6 +182,55 @@ export const ga = (codeLength, grid) => {
     const generateInitialPopulationIntelligently = () => {
 
     };
+
+    const drawPath = (moveList) => {
+        let ptrRow = grid.startLocation[0];
+        let ptrCol = grid.startLocation[1];
+
+        for (let i = 0; i < moveList.length; i++) {
+            if (UP.includes(moveList[i])) {
+                ptrRow--;
+            } else if (RIGHT.includes(moveList[i])) {
+                ptrCol++;
+            } else if (DOWN.includes(moveList[i])) {
+                ptrRow++;
+            } else if (LEFT.includes(moveList[i])) {
+                ptrCol--;
+            }
+
+            // Penalize illegal DNA sequences
+            if (ptrRow >= grid.height || ptrRow < 0 || ptrCol >= grid.width || ptrCol < 0) {
+                throw Error("Provided path is invalid");
+            }
+            if (grid.grid[ptrRow][ptrCol] === 3) 
+                throw Error("Provided path is invalid");
+
+            if (grid.grid[ptrRow][ptrCol] !== 0)
+                 continue;
+            grid.grid[ptrRow][ptrCol] = 4;
+        }
+    };
+
+    // Run the GA simulation
+    let population = generateInitialPopulationDumbly();
+    let populationPhenotypes = population.map(binaryToMoves);
+    let populationFitnesses = populationPhenotypes.map(fitness);
+
+    for (let i = 0; i < numGenerations; i++) {
+        console.log(`now at generation ${i}`);
+        population = select(population, populationFitnesses);
+        for (let j = 0; j < popSize; j++) {
+            crossover(j, population);
+            mutate(j, population);
+        }
+
+        populationPhenotypes = population.map(binaryToMoves);
+        populationFitnesses = populationPhenotypes.map(fitness);
+    }
+
+    const bestPhenotype = populationPhenotypes[max(populationFitnesses)];
+    console.log(bestPhenotype);
+    drawPath(bestPhenotype);
 };
 
 

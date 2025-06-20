@@ -1,3 +1,5 @@
+import { ga } from "./ga.js";
+
 class Grid {
     startLocation;
     endLocation;
@@ -105,6 +107,14 @@ const cellOnClick = (grid, row, col) => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const mainGrid = new Grid(10, 10);
+    const mainGrid = new Grid(5, 5);
     mainGrid.displayGrid();
+
+    const geneticButton = document.querySelector("#geneticButton");
+    geneticButton.onclick = () => {
+        if (mainGrid.startLocation === undefined || mainGrid.endLocation === undefined)
+            return;
+        ga(mainGrid.height + mainGrid.width, mainGrid);
+        mainGrid.displayGrid();
+    };
 });
