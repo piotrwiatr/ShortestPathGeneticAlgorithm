@@ -37,18 +37,18 @@ export const ga = (codeLength, grid) => {
             }
 
             // Penalize illegal DNA sequences
-            if (ptrRow > grid.height | ptrRow < 0 | ptrCol > grid.width | ptrCol < 0 | grid.grid[ptrRow][ptrCol] === 3) {
-                return 0;
+            if (ptrRow >= grid.height | ptrRow < 0 | ptrCol >= grid.width | ptrCol < 0 | grid.grid[ptrRow][ptrCol] === 3) {
+                return Infinity;
             }
             fitValue++;
         }
 
         // Ensure that the final cell we reach is the end block
         if (grid.grid[ptrRow][ptrCol] !== 2) {
-            return 0;
+            return Infinity;
         }
 
-        return (1 / (Math.E ** fitValue));
+        return (1 / fitValue);
     };
 
     // DNA: a binary array of size codeLength * 3
