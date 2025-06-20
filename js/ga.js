@@ -13,10 +13,12 @@ export const ga = (codeLength, grid) => {
     let DOWN = [3, 7];
     let LEFT = [4];
 
-    let popSize = 100;
-    let crossRate = 0.8;
-    let mutationRate = 0.003;
-    let numGenerations = 100;
+    const popSize = 100;
+    const crossRate = 0.8;
+    const mutationRate = 0.003;
+    const numGenerations = 100;
+    // 3 bits to encode 5 possible moves per iteration
+    const dnaSize = codeLength * 3;
 
     const fitness = (moveList) => {
         let ptrRow = grid.startLocation[0];
@@ -121,18 +123,35 @@ export const ga = (codeLength, grid) => {
     };
 
     const crossover = (parent, population) => {
-        
+        if (Math.random() > crossRate) return;
+
+        let randParent;
+        do {
+            randParent = Math.floor(Math.random() * popSize);
+        } while (randParent === parent);
+
+        const beginCrossPoint = Math.floor(Math.random() * dnaSize);
+        const endCrossPoint = Math.floor(Math.random() * dnaSize);
+
+        // End condition of the for loop is i <= endCrossPoint 
+        // because Math.floor(Math.random() * dnaSize) yields a value 
+        // of [0, dnaSize-1]
+        for (let i = beginCrossPoint; i <= endCrossPoint; i++) {
+            population[parent][i] = population[randParent][i];
+        }
     };
 
-    const mutate = (child) => {
-
+    const mutate = (child, population) => {
+        for (let i = 0; i < dnaSize; i++) {
+            if (Math.random() < mutationRate) {
+                population[child][i] = population[child][i] === 1 ? 0 : 1;
+            }
+        }
     };
 
     const generateInitialPop = (number) => {
 
     };
-
-
 };
 
 
