@@ -149,7 +149,19 @@ export const ga = (codeLength, grid) => {
         }
     };
 
-    const generateInitialPop = (number) => {
+    const generateInitialPopulationDumbly = () => {
+        const newPopulation = [];
+        for (let i = 0; i < popSize; i++) {
+            const newOrganism = [];
+            for (let j = 0; j < dnaSize; j++) {
+                newOrganism.push(Math.floor(Math.random() * 2));
+            }
+            newPopulation.push(newOrganism);
+        }
+        return newPopulation;
+    };
+
+    const generateInitialPopulationIntelligently = () => {
 
     };
 };
