@@ -19,7 +19,6 @@ class Grid {
                 this.grid[i].push(0);
             }
         }
-        console.log(this.grid);
     }
 
     displayGrid() {

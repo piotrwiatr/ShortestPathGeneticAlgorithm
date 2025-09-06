@@ -172,16 +172,53 @@ export const ga = (codeLength, grid) => {
         for (let i = 0; i < popSize; i++) {
             const newOrganism = [];
             for (let j = 0; j < dnaSize; j++) {
-                newOrganism.push(Math.floor(Math.random() * 2));
+                newOrganism.push(Math.floor(Math.random() * 7));
             }
             newPopulation.push(newOrganism);
         }
         return newPopulation;
     };
 
-    const generateInitialPopulationIntelligently = () => {
+    const bfs = (population, previousMoves, ptrRow, ptrCol) => {
+        if (population.length > popSize) return;
+        else if (ptrRow === grid.endLocation[0] && ptrCol === grid.endLocation[1]) {
+            population.push(previousMoves);
+            return;
+        } else if (previousMoves.length > codeLength 
+                    || ptrRow < 0 
+                    || ptrRow >= grid.height 
+                    || ptrCol < 0
+                    || ptrCol >= grid.width) {
+            return;
+        } 
+        const moveUp = previousMoves.slice();
+        moveUp.push(UP[0]);
 
+        const moveDown = previousMoves.slice();
+        moveDown.push(DOWN[0]);
+
+        const moveLeft = previousMoves.slice();
+        moveLeft.push(LEFT[0]);
+
+        const moveRight = previousMoves.slice();
+        moveRight.push(RIGHT[0]);
+
+        // Move up
+        bfs(population, moveUp, ptrRow - 1, ptrCol);
+        // Move down
+        bfs(population, moveDown, ptrRow + 1, ptrCol);
+        // Move left
+        bfs(population, moveLeft, ptrRow, ptrCol - 1);
+        // Move right
+        bfs(population, moveRight, ptrRow, ptrCol + 1);
     };
+
+    const generateInitialPopulationIntelligently = () => {
+        const population = [];
+        bfs(population, [], grid.startLocation[0], grid.startLocation[1]);
+        return population.slice(0, popSize);
+    };
+
 
     const drawPath = (moveList) => {
         let ptrRow = grid.startLocation[0];
@@ -212,7 +249,8 @@ export const ga = (codeLength, grid) => {
     };
 
     // Run the GA simulation
-    let population = generateInitialPopulationDumbly();
+    let population = generateInitialPopulationIntelligently();
+    console.log(population);
     let populationPhenotypes = population.map(binaryToMoves);
     let populationFitnesses = populationPhenotypes.map(fitness);
 
